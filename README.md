@@ -10,38 +10,20 @@ jsWarrior.turn = function(warrior) {
   if (isWallFront(warrior)) {
     warrior.pivot();
   } else if (isBehindSomething(warrior)) {
-    if (isDiamondBackward(warrior)) {
-      warrior.back = true;
-      warrior.collect('backward');
-    } else if (isWallBackward(warrior)) {
-	    warrior.back = true;
-      warrior.walk();
-    } else {
-      warrior.walk('backward'); 
-    }
+    handleBackwardDiamond(warrior);
   } else if (readyToFight(warrior)) {
-    if (isHaveToRest(warrior)) {
-      warrior.walk('backward');
-    } else {
-      warrior.attack();
-    }
+    handleAttack(warrior);
   } else if (isDiamondFront(warrior)) {
     warrior.collect();
+  } else if (isUnderAttackFromJavaLiner(warrior)) {
+    handleJavaLinerAttack(warrior)
+  } else if (isHealthy(warrior)) {
+    warrior.rest();
   } else {
-    if (isUnderAttackFromJavaLiner(warrior)) {
-      if (isHaveToEscape(warrior)) {
-        warrior.walk('backward');
-      } else {
-        warrior.walk();
-      }
-    } else if (isHealthy(warrior)) {
-      warrior.rest();
-    } else {
-      warrior.walk();
-    }
+    warrior.walk();
   }
 
-  warrior.health = warrior.getHealth();
+  saveLastHealth(warrior);
 }
 
 function isWallFront(warrior) {
@@ -82,5 +64,37 @@ function isHaveToEscape(warrior) {
 
 function isHealthy(warrior) {
   return warrior.getHealth() < 20;
+}
+
+function handleBackwardDiamond(warrior) {
+  if (isDiamondBackward(warrior)) {
+    warrior.back = true;
+    warrior.collect('backward');
+  } else if (isWallBackward(warrior)) {
+    warrior.back = true;
+    warrior.walk();
+  } else {
+    warrior.walk('backward');
+  }
+}
+
+function handleAttack(warrior) {
+  if (isHaveToRest(warrior)) {
+    warrior.walk('backward');
+  } else {
+    warrior.attack();
+  }
+}
+
+function handleJavaLinerAttack(warrior) {
+  if (isHaveToEscape(warrior)) {
+    warrior.walk('backward');
+  } else {
+    warrior.walk();
+  }
+}
+
+function saveLastHealth(warrior) {
+  warrior.health = warrior.getHealth();
 }
 ```
