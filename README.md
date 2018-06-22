@@ -7,34 +7,34 @@ Let's help him!
 
 ```JavaScript
 jsWarrior.turn = function(warrior) {
-  if (warrior.check() === 'wall') {
+  if (isWallFront(warrior)) {
     warrior.pivot();
-  } else if (!warrior.back) {
-    if (warrior.check('backward') === 'diamond') {
+  } else if (isBehindSomething(warrior)) {
+    if (isDiamondBackward(warrior)) {
       warrior.back = true;
       warrior.collect('backward');
-    } else if (warrior.check('backward') === 'wall') {
-	  warrior.back = true;
+    } else if (isWallBackward(warrior)) {
+	    warrior.back = true;
       warrior.walk();
     } else {
       warrior.walk('backward'); 
     }
-  } else if (warrior.check() === 'enemy') {
-    if (warrior.getHealth() < 10) {
+  } else if (readyToFight(warrior)) {
+    if (isHaveToRest(warrior)) {
       warrior.walk('backward');
     } else {
       warrior.attack();
     }
-  } else if (warrior.check() === 'diamond') {
+  } else if (isDiamondFront(warrior)) {
     warrior.collect();
   } else {
-    if (warrior.getHealth() < warrior.health) {
-      if (warrior.getHealth() < 7) {
+    if (isUnderAttackFromJavaLiner(warrior)) {
+      if (isHaveToEscape(warrior)) {
         warrior.walk('backward');
       } else {
         warrior.walk();
       }
-    } else if (warrior.getHealth() < 20) {
+    } else if (isHealthy(warrior)) {
       warrior.rest();
     } else {
       warrior.walk();
@@ -42,5 +42,45 @@ jsWarrior.turn = function(warrior) {
   }
 
   warrior.health = warrior.getHealth();
+}
+
+function isWallFront(warrior) {
+  return warrior.check() === 'wall';
+}
+
+function isWallBackward(warrior) {
+  return warrior.check('backward') === 'wall';
+}
+
+function readyToFight(warrior) {
+  return warrior.check() === 'enemy';
+}
+
+function isDiamondFront(warrior) {
+  return warrior.check() === 'diamond';
+}
+
+function isDiamondBackward(warrior) {
+  return warrior.check('backward') === 'diamond';
+}
+
+function isBehindSomething(warrior) {
+  return !warrior.back;
+}
+
+function isHaveToRest(warrior) {
+  return warrior.getHealth() < 10;
+}
+
+function isUnderAttackFromJavaLiner(warrior) {
+  return warrior.getHealth() < warrior.health;
+};
+
+function isHaveToEscape(warrior) {
+  return warrior.getHealth() < 7;
+}
+
+function isHealthy(warrior) {
+  return warrior.getHealth() < 20;
 }
 ```
