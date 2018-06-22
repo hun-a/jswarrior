@@ -17,7 +17,7 @@ jsWarrior.turn = function(warrior) {
     warrior.collect();
   } else if (isUnderAttackFromJavaLiner(warrior)) {
     handleJavaLinerAttack(warrior)
-  } else if (isHealthy(warrior)) {
+  } else if (isNotHealthy(warrior)) {
     warrior.rest();
   } else {
     warrior.walk();
@@ -56,13 +56,13 @@ function isHaveToRest(warrior) {
 
 function isUnderAttackFromJavaLiner(warrior) {
   return warrior.getHealth() < warrior.health;
-};
+}
 
 function isHaveToEscape(warrior) {
   return warrior.getHealth() < 7;
 }
 
-function isHealthy(warrior) {
+function isNotHealthy(warrior) {
   return warrior.getHealth() < 20;
 }
 
